@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'categoria',
     'usuario',
     'tipo_transacao',
-    'transacao'
+    'transacao',
+    'tailwind',
+    'theme',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_ROOT=BASE_DIR/"static"
 STATICFILES_DIRS=['fingestor/static']
+
+TAILWIND_APP_NAME = 'theme'
