@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'categoria',
     'usuario',
     'tipo_transacao',
-    'transacao',
-],
+    'transacao'
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
