@@ -13,16 +13,14 @@ def register(request):
     if request.method == 'POST':
         form = FormRegistroUsuario(request.POST)
         if form.is_valid():
-            print(form)
-            print(request.body)
-            nome = form.changed_data['id_nome']
-            email = form.changed_data['id_email']
-            senha = form.changed_data['id_senha']
-            meta = form.changed_data['id_meta']
+            nome = form.cleaned_data['nome']
+            email = form.cleaned_data['email']
+            senha = form.cleaned_data['senha']
+            meta = form.cleaned_data['meta']
             usuario = Usuario.criar_usuario(nome, email, senha, meta )
             usuario.save()
-    
-    form = FormRegistroUsuario()
+    else:
+        form = FormRegistroUsuario()
     contexto = {'formulario' : form, }
     return render(request,'register.html', contexto)
 
