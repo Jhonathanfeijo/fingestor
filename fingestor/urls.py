@@ -20,7 +20,7 @@ from fingestor import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home,),
-    path('login/', views.login ),
+    path('home/', views.home, name = 'home'),
+    path('login/', views.logar, name = 'login' ),
     path('register/', views.register, name = 'register'),
 ]
