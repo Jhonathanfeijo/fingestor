@@ -10,16 +10,12 @@
 <body class="bg-gray-900 text-white min-h-screen">
 
   <!-- Navbar -->
-  <nav class="bg-gray-800 px-6 py-4 shadow-lg flex justify-between items-center">
-    <div class="flex items-center space-x-6">
-      <span class="text-2xl font-bold text-green-400">Fingestor</span>
-      <a href="/" class="text-white hover:text-green-400 transition">Início</a>
-      <a href="/relatorios" class="text-white hover:text-green-400 transition">Relatórios</a>
-      <a href="/custos" class="text-white hover:text-green-400 transition">Custos</a>
-    </div>
-    <div>
-      <span class="text-sm text-gray-300">Olá, <strong>{{ user.username }}</strong></span>
-    </div>
-  </nav>
+  {% include "includes/navbar.html" %}
   <main class="p-6">
+    {% block content %}
+    {% endblock content %}
+  </main>
+  </body>
+</html>
+
   
