@@ -138,3 +138,5 @@ STATIC_ROOT=BASE_DIR/"static"
 STATICFILES_DIRS=['fingestor/static']
 
 TAILWIND_APP_NAME = 'theme'
+
+AUTH_USER_MODEL = 'usuario.Usuario'

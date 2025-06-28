@@ -1,17 +1,51 @@
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-# Create your models here.
+class UsuarioManager(BaseUserManager):
+    def create_user(self, email, password=None, valor = 0, **extra_fields):
+        if not email:
+            raise ValueError("E-mail obrigatório")
+        email = self.normalize_email(email)
 
-class Usuario(models.Model):
-    nome = models.CharField()
+        # Garante que "meta" foi enviado
+        if "meta" not in extra_fields:
+            raise ValueError("O campo 'meta' é obrigatório")
+
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    senha = models.CharField(max_length=128)
-    data_criacao = models.DateTimeField(auto_now_add=True)
-    meta = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    
-    @classmethod
-    def criar_usuario(cls, nome, email, senha, meta):
-        if len(senha) < 4:
-            raise ValueError("Senha muito curta.")
-        return cls(nome=nome, email=email, senha=senha, meta=meta)
-    
+    nome  = models.CharField(max_length=255)
+
+    # ---------- novo campo ----------
+    meta  = models.DecimalField(
+        max_digits=10,      # ex.: até 9 999 999,99
+        decimal_places=2,
+        null=False,
+        blank=False
+    )
+    valor  = models.DecimalField(
+        max_digits=10,      # ex.: até 9 999 999,99
+        decimal_places=2,
+        null=False,
+        blank=False,
+        default = 0
+    )
+    # ---------------------------------
+
+    is_active = models.BooleanField(default=True)
+    is_staff  = models.BooleanField(default=False)
+
+    objects = UsuarioManager()
+
+    USERNAME_FIELD  = "email"
+    REQUIRED_FIELDS = ["nome", "meta"]    # torna obrigatório no createsuperuser

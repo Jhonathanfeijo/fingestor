@@ -1,3 +1,60 @@
 from django.shortcuts import render
 
 # Create your views here.
+from decimal import Decimal      # para garantir tipo correto do campo meta
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+from .forms import FormRegistroUsuario
+from .models import Usuario
+
+
+def home(request):
+    return render(request, "home.html")
+
+
+def logar(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        senha = request.POST.get("senha")
+
+        # Com USERNAME_FIELD = "email", basta passar `username=email`
+        usuario = authenticate(request, username=email, password=senha)
+
+        if usuario is not None:
+            login(request, usuario)
+            return redirect("home")
+        else:
+            messages.error(request, "Credenciais inválidas")
+            return redirect("login")
+
+    return render(request, "login.html")
+
+
+def register(request):
+    if request.method == "POST":
+        form = FormRegistroUsuario(request.POST)
+
+        if form.is_valid():
+            nome = form.cleaned_data["nome"]
+            email = form.cleaned_data["email"]
+            senha = form.cleaned_data["senha"]
+            meta = form.cleaned_data["meta"]  # já vem como Decimal pelo form
+
+            # Usa o manager padrão do modelo
+            Usuario.objects.create_user(
+                email=email,
+                password=senha,
+                nome=nome,
+                meta=Decimal(meta),  # só por garantia
+            )
+
+            messages.success(request, "Usuário criado com sucesso! Faça login.")
+            return redirect("login")
+    else:
+        form = FormRegistroUsuario()
+
+    contexto = {"formulario": form}
+    return render(request, "register.html", contexto)

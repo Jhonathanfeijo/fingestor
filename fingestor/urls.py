@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from fingestor import views
+from usuario import views as usuario_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name = 'home'),
-    path('login/', views.logar, name = 'login' ),
-    path('register/', views.register, name = 'register'),
+    path('login/', usuario_views.logar, name = 'login' ),
+    path('register/', usuario_views.register, name = 'register'),
 ]
