@@ -1,31 +1,34 @@
 {% extends "base.html" %}
-{% load static tailwind_tags %}
+{% load static %}
 
 {% block content %}
-<div class="w-screen min-h-screen bg-gray-900 flex flex-col items-center py-10">
+<section class="mx-auto max-w-3xl bg-gray-800 p-6 rounded-md md:p-10">
+  <!-- Cabeçalho + Botão adicionar -->
+  <header class="mb-8 flex items-center justify-between">
+    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow">
+      Minhas Transações
+    </h1>
 
-  <!-- Cabeçalho (título + botão) -->
-  <div class="flex items-center justify-between w-11/12 md:w-4/5 lg:w-2/3 mb-6">
-    <h1 class="text-white text-3xl font-extrabold">Minhas Transações</h1>
-
-    <a href="/transacao/form"
-       class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-      + Adicionar Transação
+    <a href="{% url 'form_transacao' %}"
+       class="inline-block bg-green-600 hover:opacity-70 px-4 py-2 rounded-lg font-semibold">
+      + Adicionar
     </a>
-  </div>
+  </header>
 
-  <!-- Tabela/lista -->
-  <div class="w-11/12 md:w-4/5 lg:w-2/3 bg-gray-800 rounded-lg shadow overflow-x-auto">
-    <table class="min-w-full text-sm text-gray-300">
-      <thead class="bg-gray-700 text-gray-200 uppercase text-xs">
+  <!-- Tabela -->
+  <div class="rounded-2xl ring-1 ring-indigo-400/30 shadow-2xl overflow-x-auto">
+    <table class="min-w-full text-sm text-gray-200">
+      <thead class="bg-gray-700 text-xs uppercase">
         <tr>
           <th class="px-4 py-3 text-left">Data</th>
           <th class="px-4 py-3 text-left">Categoria</th>
           <th class="px-4 py-3 text-left">Tipo</th>
           <th class="px-4 py-3 text-right">Valor (R$)</th>
           <th class="px-4 py-3 text-left">Descrição</th>
+          <th class="px-4 py-3 text-center">Ações</th>
         </tr>
       </thead>
+
       <tbody>
         {% if transacoes %}
           {% for t in transacoes %}
@@ -37,11 +40,28 @@
                 {{ t.valor|floatformat:2 }}
               </td>
               <td class="px-4 py-2">{{ t.descricao|default:"—" }}</td>
+
+              <!-- Botões Editar / Excluir -->
+              <td class="px-4 py-2 text-center whitespace-nowrap">
+                <a href="{% url 'transacao-editar' t.pk %}"
+                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded mr-2">
+                  Editar
+                </a>
+
+                <form action="{% url 'transacao-excluir' t.pk %}" method="delete" class="inline">
+                  {% csrf_token %}
+                  <button type="submit"
+                          class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded"
+                          onclick="return confirm('Tem certeza que deseja excluir esta transação?');">
+                    Excluir
+                  </button>
+                </form>
+              </td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+            <td colspan="6" class="px-4 py-6 text-center text-gray-400">
               Nenhuma transação cadastrada.
             </td>
           </tr>
@@ -49,5 +69,5 @@
       </tbody>
     </table>
   </div>
-</div>
+</section>
 {% endblock content %}

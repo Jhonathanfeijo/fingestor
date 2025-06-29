@@ -10,5 +10,7 @@ urlpatterns = [
     path('login/', usuario_views.logar, name = 'login' ),
     path('register/', usuario_views.register, name = 'register'),
     path('transacao/form', transacao_views.transacao_nova, name = 'form_transacao'),
-    path('transacao/', transacao_views.transacao_lista, name = 'transacoes')
+    path('transacao/', transacao_views.transacao_lista, name = 'transacoes'),
+    path("transacoes/<int:pk>/editar/", transacao_views.transacao_editar, name="transacao-editar"),
+    path("transacoes/<int:pk>/excluir/", transacao_views.transacao_excluir, name="transacao-excluir"),
 ]
