@@ -3,14 +3,13 @@ from django.shortcuts import render
 # Create your views here.
 from decimal import Decimal      # para garantir tipo correto do campo meta
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .forms import FormRegistroUsuario, PerfilForm
 from .models import Usuario
-
 
 def home(request):
     return render(request, "home.html")
@@ -71,3 +70,22 @@ def perfil(request):
         form = PerfilForm(instance=request.user)
 
     return render(request, "usuario/perfil.html", {"form": form})
+
+@login_required
+def alterar_senha(request):
+    if request.method == "POST":
+        atual = request.POST.get("senha_atual")
+        nova1 = request.POST.get("nova_senha1")
+        nova2 = request.POST.get("nova_senha2")
+
+        if not request.user.check_password(atual):
+            messages.error(request, "Senha atual incorreta.")
+        elif nova1 != nova2:
+            messages.error(request, "As novas senhas não conferem.")
+        else:
+            request.user.set_password(nova1)
+            request.user.save()
+            update_session_auth_hash(request, request.user)  # mantém login
+            messages.success(request, "Senha alterada com sucesso!")
+
+    return redirect("perfil")            # volta para /perfil/
