@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static tailwind_tags %}
+
+{% block content %}
+<div class="w-screen min-h-screen bg-gray-900 flex flex-col items-center py-10">
+
+  <!-- Cabeçalho (título + botão) -->
+  <div class="flex items-center justify-between w-11/12 md:w-4/5 lg:w-2/3 mb-6">
+    <h1 class="text-white text-3xl font-extrabold">Minhas Transações</h1>
+
+    <a href="/transacao/form"
+       class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+      + Adicionar Transação
+    </a>
+  </div>
+
+  <!-- Tabela/lista -->
+  <div class="w-11/12 md:w-4/5 lg:w-2/3 bg-gray-800 rounded-lg shadow overflow-x-auto">
+    <table class="min-w-full text-sm text-gray-300">
+      <thead class="bg-gray-700 text-gray-200 uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3 text-left">Data</th>
+          <th class="px-4 py-3 text-left">Categoria</th>
+          <th class="px-4 py-3 text-left">Tipo</th>
+          <th class="px-4 py-3 text-right">Valor (R$)</th>
+          <th class="px-4 py-3 text-left">Descrição</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if transacoes %}
+          {% for t in transacoes %}
+            <tr class="border-t border-gray-700 hover:bg-gray-700/40">
+              <td class="px-4 py-2">{{ t.data|date:"d/m/Y H:i" }}</td>
+              <td class="px-4 py-2">{{ t.categoria }}</td>
+              <td class="px-4 py-2">{{ t.tipo_transacao }}</td>
+              <td class="px-4 py-2 text-right {% if t.tipo_transacao.pk == 1 %}text-green-400{% else %}text-red-400{% endif %}">
+                {{ t.valor|floatformat:2 }}
+              </td>
+              <td class="px-4 py-2">{{ t.descricao|default:"—" }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+              Nenhuma transação cadastrada.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

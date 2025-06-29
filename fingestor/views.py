@@ -10,8 +10,10 @@ from usuario.models import Usuario
 
 def home(request):
     usuario = request.user
-    saldo = Decimal(usuario.meta) - Decimal(usuario.valor)
-    context = { "saldo" :  saldo}
+    diferenca = Decimal(usuario.valor) - Decimal(usuario.meta)
+    if diferenca < 0:
+        diferenca = diferenca * -1
+    context = { "diferenca" :  diferenca}
     return render(request, "home.html", context)
 
 

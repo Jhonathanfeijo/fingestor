@@ -2,7 +2,15 @@
 {% block content %}
     <h1 class="text-3xl font-semibold mb-4">Bem-vindo ao Fingestor 👋</h1>
     <!-- Aqui você pode colocar o conteúdo das páginas -->
-     <h2>Você possui como meta definida o valor de R$ {{user.meta}}</h2>
+    <h2>Sua meta é de R$ {{ user.meta|floatformat:2 }}</h2>
+
+    {% if user.valor > user.meta %}
+      <p class="font-bold text-green-500">Parabéns! Você tem R$ {{ diferenca|floatformat:2 }} a mais que a meta.</p>
+    {% elif user.valor < user.meta %}
+      <p class="font-bold text-red-600">Ainda faltam R$ {{ diferenca|floatformat:2 }} para atingir sua meta.</p>
+    {% else %}
+      <p>Você atingiu sua meta 🎉</p>
+    {% endif %}
     <p class="text-gray-300">Use a navegação acima para acessar os módulos do sistema.</p>
     <!-- Aqui você pode colocar o conteúdo das páginas -->
 {% endblock content %}
