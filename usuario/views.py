@@ -4,10 +4,11 @@ from django.shortcuts import render
 from decimal import Decimal      # para garantir tipo correto do campo meta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from .forms import FormRegistroUsuario
+from .forms import FormRegistroUsuario, PerfilForm
 from .models import Usuario
 
 
@@ -58,3 +59,15 @@ def register(request):
 
     contexto = {"formulario": form}
     return render(request, "register.html", contexto)
+
+@login_required
+def perfil(request):
+    if request.method == "POST":
+        form = PerfilForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("perfil")   # recarrega em modo visualização
+    else:
+        form = PerfilForm(instance=request.user)
+
+    return render(request, "usuario/perfil.html", {"form": form})

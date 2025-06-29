@@ -13,4 +13,5 @@ urlpatterns = [
     path('transacao/', transacao_views.transacao_lista, name = 'transacoes'),
     path("transacoes/<int:pk>/editar/", transacao_views.transacao_editar, name="transacao-editar"),
     path("transacoes/<int:pk>/excluir/", transacao_views.transacao_excluir, name="transacao-excluir"),
+    path('perfil', usuario_views.perfil, name = 'perfil')
 ]

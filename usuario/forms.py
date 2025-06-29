@@ -41,4 +41,53 @@ class FormRegistroUsuario(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ["nome", "email", "meta", "senha"]
+
+class PerfilForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ["nome", "email", "meta"]      # ajuste se tiver mais campos
+        labels = {
+            "nome":  "Nome",
+            "email": "E‑mail",
+            "meta":  "Meta (R$)",
+        }
+        widgets = {
+            "nome": forms.TextInput(
+                attrs={
+                    "class": (
+                        "block w-full rounded-md bg-gray-700 border border-gray-600 "
+                        "px-3 py-2 text-white placeholder-gray-400 "
+                        "focus:ring-2 focus:ring-green-500 outline-none"
+                    )
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": (
+                        "block w-full rounded-md bg-gray-700 border border-gray-600 "
+                        "px-3 py-2 text-white placeholder-gray-400 "
+                        "focus:ring-2 focus:ring-green-500 outline-none"
+                    )
+                }
+            ),
+            "meta": forms.NumberInput(
+                attrs={
+                    "step": "0.01",
+                    "min": "0",
+                    "class": (
+                        "block w-full rounded-md bg-gray-700 border border-gray-600 "
+                        "px-3 py-2 text-white placeholder-gray-400 "
+                        "focus:ring-2 focus:ring-green-500 outline-none"
+                    ),
+                }
+            ),
+        }
+
+    # evita que o usuário salve um e‑mail já usado por outra conta
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        qs = Usuario.objects.filter(email=email).exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("Este e‑mail já está em uso.")
+        return email
         
