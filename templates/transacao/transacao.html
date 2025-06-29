@@ -9,7 +9,7 @@
       Minhas Transações
     </h1>
 
-    <a href="{% url 'form_transacao' %}"
+    <a href="{% url 'transacao_form' %}"
        class="inline-block bg-green-600 hover:opacity-70 px-4 py-2 rounded-lg font-semibold">
       + Adicionar
     </a>
@@ -48,7 +48,7 @@
                   Editar
                 </a>
 
-                <form action="{% url 'transacao-excluir' t.pk %}" method="delete" class="inline">
+                <form action="{% url 'transacao-excluir' t.pk %}" method="POST" class="inline">
                   {% csrf_token %}
                   <button type="submit"
                           class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded"

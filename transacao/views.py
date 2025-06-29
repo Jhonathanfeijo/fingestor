@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TransacaoForm
 from django.contrib.auth.decorators import login_required
 from .models import Transacao
@@ -28,20 +28,28 @@ def transacao_lista(request):
 @login_required
 def transacao_editar(request, pk):
     transacao = get_object_or_404(Transacao, pk=pk, usuario=request.user)
+
     if request.method == "POST":
         form = TransacaoForm(request.POST, instance=transacao)
         if form.is_valid():
             form.save()
-            return redirect("transacao-lista")
+            return redirect("transacao_form")
     else:
         form = TransacaoForm(instance=transacao)
-    return render(request, "transacao/transacao_form.html", {"form": form})
+
+    # passando flag para o template mudar título/botão
+    return render(
+        request,
+        "transacao/transacao_form.html",
+        {"form": form, "is_edit": True, "obj": transacao},
+    )
 
 @login_required
 def transacao_excluir(request, pk):
     transacao = get_object_or_404(Transacao, pk=pk, usuario=request.user)
-    if request.method == "DELETE":
+    if request.method == "POST":
         transacao.delete()
-        return redirect("transacao-lista")
+        return redirect("transacoes")
     # confirmação simples opcional
     return render(request, "transacao/confirm_delete.html", {"transacao": transacao})
+

@@ -5,17 +5,19 @@
 <section class="mx-auto max-w-3xl bg-gray-800 p-6 rounded-md md:p-10">
   <header class="mb-8">
     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow">
-      Nova Transação
+      {% if is_edit %}Editar Transação{% else %}Nova Transação{% endif %}
     </h1>
   </header>
 
   <form method="post"
-        class="space-y-6 rounded-2xl 
-               backdrop-blur-sm ring-1 ring-indigo-400/30 shadow-2xl p-8">
+        class="space-y-6 rounded-2xl backdrop-blur-sm ring-1 ring-indigo-400/30
+               shadow-2xl p-8">
     {% csrf_token %}
+    {{ form.non_field_errors }}
 
+    <!-- Categoria -->
     <div>
-      <label for="{{ form.categoria.id_for_label }}" class="block mb-1 font-semibold ">
+      <label for="{{ form.categoria.id_for_label }}" class="block mb-1 font-semibold">
         {{ form.categoria.label }}
       </label>
       {{ form.categoria }}
@@ -24,8 +26,9 @@
       {% endif %}
     </div>
 
+    <!-- Tipo -->
     <div>
-      <label for="{{ form.tipo_transacao.id_for_label }}" class="block mb-1 font-semibold ">
+      <label for="{{ form.tipo_transacao.id_for_label }}" class="block mb-1 font-semibold">
         {{ form.tipo_transacao.label }}
       </label>
       {{ form.tipo_transacao }}
@@ -34,8 +37,9 @@
       {% endif %}
     </div>
 
+    <!-- Valor -->
     <div>
-      <label for="{{ form.valor.id_for_label }}" class="block mb-1 font-semibold ">
+      <label for="{{ form.valor.id_for_label }}" class="block mb-1 font-semibold">
         {{ form.valor.label }}
       </label>
       {{ form.valor }}
@@ -44,9 +48,9 @@
       {% endif %}
     </div>
 
-    <!-- Campo: Descrição -->
+    <!-- Descrição -->
     <div>
-      <label for="{{ form.descricao.id_for_label }}" class="block mb-1 font-semibold ">
+      <label for="{{ form.descricao.id_for_label }}" class="block mb-1 font-semibold">
         {{ form.descricao.label }}
       </label>
       {{ form.descricao }}
@@ -55,15 +59,15 @@
       {% endif %}
     </div>
 
-    <!-- Campo: Categoria -->
-
     <!-- Botões -->
     <div class="pt-4 flex gap-4">
       <button type="submit"
-              class="px-6 py-2 rounded-lg font-semibold bg-green-600 transition hover:opacity-70 cursor-pointer">
-        Salvar
+              class="px-6 py-2 rounded-lg font-semibold bg-green-600 transition
+                     hover:opacity-70 cursor-pointer">
+        {% if is_edit %}Salvar Alterações{% else %}Salvar{% endif %}
       </button>
-      <a href="{% url 'home' %}"
+
+      <a href="{% url 'transacoes' %}"
          class="px-6 py-2 rounded-lg font-semibold bg-slate-600/70 hover:bg-slate-600 transition">
         Cancelar
       </a>
