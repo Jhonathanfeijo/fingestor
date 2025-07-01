@@ -14,5 +14,6 @@ urlpatterns = [
     path("transacoes/<int:pk>/editar/", transacao_views.transacao_editar, name="transacao-editar"),
     path("transacoes/<int:pk>/excluir/", transacao_views.transacao_excluir, name="transacao-excluir"),
     path('perfil', usuario_views.perfil, name = 'perfil'),
-    path("perfil/alterar-senha/", usuario_views.alterar_senha, name="alterar-senha")
+    path("perfil/alterar-senha/", usuario_views.alterar_senha, name="alterar-senha"),
+    path("relatorios/", transacao_views.relatorios, name="relatorios"),
 ]

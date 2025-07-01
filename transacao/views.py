@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TransacaoForm
 from django.contrib.auth.decorators import login_required
 from .models import Transacao
-
+from django.db.models.functions import TruncMonth
+from django.db.models import Sum
 
 def transacao_nova(request):
     if request.method == "POST":
@@ -53,3 +54,30 @@ def transacao_excluir(request, pk):
     # confirmação simples opcional
     return render(request, "transacao/confirm_delete.html", {"transacao": transacao})
 
+@login_required
+def relatorios(request):
+    user = request.user
+
+    # 1) Relatório mensal – soma de despesas por mês (últimos 12)
+    mensal = (
+        Transacao.objects
+        .filter(usuario=user, tipo_transacao__descricao__iexact="Despesa")
+        .annotate(mes=TruncMonth("data"))
+        .values("mes")
+        .annotate(total=Sum("valor"))
+        .order_by("-mes")            # ← mês mais novo primeiro
+    )
+
+    maiores = (
+        Transacao.objects
+        .filter(usuario=user, tipo_transacao__descricao__iexact="Despesa")
+        .values("categoria__categoria_name")           # agrupa pela descrição da categoria
+        .annotate(total=Sum("valor"))             # soma dos valores
+        .order_by("-total")[:10]                  # do maior para o menor
+    )
+
+    return render(
+        request,
+        "transacao/relatorios.html",
+        {"mensal": mensal, "maiores": maiores},
+    )

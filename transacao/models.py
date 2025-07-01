@@ -9,6 +9,5 @@ class Transacao(models.Model):
     tipo_transacao = models.ForeignKey(Tipo_Transacao, on_delete=models.PROTECT)
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     descricao = models.TextField(blank=True)
-    data = models.DateTimeField(auto_now_add=True)
+    data = models.DateField(auto_now_add=True)  # <-- ALTERADO AQUI
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
-    
