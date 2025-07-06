@@ -8,13 +8,19 @@
       <a href="/relatorios" class="text-white hover:text-green-400 transition">Relatórios</a>
     </div>
     <div>
-      <div class="flex flex-row gap-2">
+      <div class="flex flex-row items-center gap-2">
         <span class="tex text-gray-300 flex flex-row">Olá, 
           <a class="hover:underline" href="/perfil">
             <strong>{{ user.nome }}</strong></span>
           </a>
         </span>
-        <div class="mx-2">Sair</div>
+        <form method="post" action="{% url 'logout' %}" class="inline">
+  {% csrf_token %}
+  <button type="submit"
+          class="px-4 py-2 rounded-lg font-semibold hover:underline">
+    Sair
+  </button>
+</form>
       </div>
   </nav>
   

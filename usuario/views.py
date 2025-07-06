@@ -5,9 +5,9 @@ from decimal import Decimal      # para garantir tipo correto do campo meta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
 from .forms import FormRegistroUsuario, PerfilForm
 from .models import Usuario
 
@@ -89,3 +89,4 @@ def alterar_senha(request):
             messages.success(request, "Senha alterada com sucesso!")
 
     return redirect("perfil")            # volta para /perfil/
+
