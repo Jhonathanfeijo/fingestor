@@ -1,17 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-    <h1 class="text-3xl font-semibold mb-4">Bem-vindo ao Fingestor 👋</h1>
-    <!-- Aqui você pode colocar o conteúdo das páginas -->
-    <h2>Sua meta é de R$ {{ user.meta|floatformat:2 }}</h2>
+<section class="mx-auto max-w-4xl p-6 md:p-10 space-y-8">
 
-    {% if user.valor > user.meta %}
-      <p class="font-bold text-green-500">Parabéns! Você tem R$ {{ diferenca|floatformat:2 }} a mais que a meta.</p>
-    {% elif user.valor < user.meta %}
-      <p class="font-bold text-red-600">Ainda faltam R$ {{ diferenca|floatformat:2 }} para atingir sua meta.</p>
-    {% else %}
-      <p>Você atingiu sua meta 🎉</p>
-    {% endif %}
-    <p class="text-gray-300">Use a navegação acima para acessar os módulos do sistema.</p>
-    <!-- Aqui você pode colocar o conteúdo das páginas -->
+  <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow mb-6">
+    Bem‑vindo ao Fingestor 👋
+  </h1>
+
+  <!-- DASHBOARDS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Total de Despesas -->
+    <div class="rounded-2xl bg-gray-800 p-6 ring-1 ring-red-500/40 shadow hover:bg-gray-600 duration-200">
+      <h2 class="text-lg font-semibold text-red-300 mb-3">Total de Despesas</h2>
+      <p class="text-4xl font-bold text-red-400">
+        R$ {{ total_despesas|floatformat:2 }}
+      </p>
+    </div>
+
+    <!-- Lucro -->
+    <div class="rounded-2xl bg-gray-800 p-6 ring-1 ring-green-500/40 shadow hover:bg-gray-600 duration-200">
+      <h2 class="text-lg font-semibold text-green-300 mb-3">Total de Receitas</h2>
+      <p class="text-4xl font-bold text-green-400">
+        R$ {{ total_receitas|floatformat:2 }}
+      </p>
+    </div>
+  </div>
+      <div class="rounded-2xl bg-gray-800 p-6 ring-1 ring-green-500/40 shadow hover:bg-gray-600 duration-200 {% if lucro >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+      <h2 class="text-lg font-semibold mb-3">Lucro</h2>
+      <p class="text-4xl font-bold">
+        R$ {{ lucro|floatformat:2 }}
+      </p>
+    </div>
+  </div>
+
+  <p class="mt-8 text-gray-300">
+    Use a navegação acima para acessar os módulos do sistema.
+  </p>
+</section>
 {% endblock content %}
-

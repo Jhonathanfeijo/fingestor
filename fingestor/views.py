@@ -7,13 +7,40 @@ from django.shortcuts import render, redirect
 from usuario.forms import FormRegistroUsuario
 from usuario.models import Usuario
 
+from transacao.models import Transacao
 
+from django.db.models import Sum, Aggregate
+
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
 def home(request):
-    usuario = request.user
-    diferenca = Decimal(usuario.valor) - Decimal(usuario.meta)
-    if diferenca < 0:
-        diferenca = diferenca * -1
-    context = { "diferenca" :  diferenca}
-    return render(request, "home.html", context)
+    user = request.user
 
+    # Somatório de despesas e receitas
+    despesas = (
+        Transacao.objects
+        .filter(usuario=user, tipo_transacao__descricao__iexact="Despesa")
+        .aggregate(total=Sum("valor"))
+        .get("total") or 0
+    )
 
+    receitas = (
+        Transacao.objects
+        .filter(usuario=user, tipo_transacao__descricao__iexact="Receita")
+        .aggregate(total=Sum("valor"))
+        .get("total") or 0
+    )
+
+    lucro = receitas - despesas
+
+    return render(
+        request,
+        "home.html",
+        {
+            'total_receitas': receitas,
+            "total_despesas": despesas,
+            "lucro": lucro,
+        },
+    )
