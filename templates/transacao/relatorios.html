@@ -28,12 +28,12 @@
       </thead>
       <tbody>
         {% for linha in mensal %}
-          <tr class="border-t border-gray-700 hover:bg-gray-700/40">
+          <tr class="linha-mes border-t border-gray-700 hover:bg-gray-700/40 cursor-pointer"
+              data-ano="{{ linha.mes|date:'Y' }}"
+              data-mes="{{ linha.mes|date:'n' }}">
             <td class="px-4 py-2">{{ linha.mes|date:"M/Y" }}</td>
             <td class="px-4 py-2 text-right">{{ linha.total|floatformat:2 }}</td>
           </tr>
-        {% empty %}
-          <tr><td colspan="2" class="px-4 py-4 text-center text-gray-400">Sem dados.</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -63,6 +63,34 @@
     </table>
   </div>
 </section>
+<!-- MODAL -->
+<div id="modalMes"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+  <div class="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-6">
+    <h2 id="modalTitulo" class="text-xl font-bold text-white mb-4"></h2>
+
+    <div class="overflow-y-auto max-h-[60vh]">
+      <table class="min-w-full text-sm text-gray-200">
+        <thead class="bg-gray-700 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-2 text-left">Data</th>
+            <th class="px-4 py-2 text-left">Categoria</th>
+            <th class="px-4 py-2 text-right">Valor (R$)</th>
+            <th class="px-4 py-2 text-left">Descrição</th>
+          </tr>
+        </thead>
+        <tbody id="modalBody"></tbody>
+      </table>
+    </div>
+
+    <div class="mt-6 text-right">
+      <button id="modalClose"
+              class="px-4 py-2 rounded bg-slate-600/70 hover:bg-slate-600 font-semibold">
+        Fechar
+      </button>
+    </div>
+  </div>
+</div>
 
 {# ---------- JS para alternar abas ---------- #}
 <script>
@@ -82,5 +110,49 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
   });
 });
+</script>
+
+<script>
+function csrftoken() {
+  return document.cookie
+    .split(';')
+    .map(v => v.trim().split('='))
+    .find(v => v[0] === 'csrftoken')?.[1];
+}
+
+const modal   = document.getElementById('modalMes');
+const titulo  = document.getElementById('modalTitulo');
+const tbody   = document.getElementById('modalBody');
+const fechar  = document.getElementById('modalClose');
+
+// abre modal e carrega dados via fetch
+document.querySelectorAll('.linha-mes').forEach(linha => {
+  linha.addEventListener('click', () => {
+    const ano = linha.dataset.ano;
+    const mes = linha.dataset.mes;
+
+    fetch(`/relatorios/despesas/${ano}/${mes}/`, {
+      headers: { 'X-CSRFToken': csrftoken() }
+    })
+      .then(r => r.json())
+      .then(d => {
+        titulo.textContent = `Despesas de ${d.mes}`;
+        tbody.innerHTML = d.transacoes.length
+          ? d.transacoes.map(t => `
+              <tr class="border-t border-gray-700">
+                <td class="px-4 py-2">${t.data}</td>
+                <td class="px-4 py-2">${t.categoria}</td>
+                <td class="px-4 py-2 text-right text-red-400">${t.valor.toFixed(2)}</td>
+                <td class="px-4 py-2">${t.descricao}</td>
+              </tr>
+            `).join('')
+          : `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-400">Sem dados.</td></tr>`;
+        modal.classList.remove('hidden', 'items-center', 'justify-center'); // torna visível
+        modal.classList.add('flex');
+      });
+  });
+});
+
+fechar.onclick = () => modal.classList.add('hidden');
 </script>
 {% endblock content %}

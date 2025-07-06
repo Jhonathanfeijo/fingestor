@@ -140,3 +140,7 @@ STATICFILES_DIRS=['fingestor/static']
 TAILWIND_APP_NAME = 'theme'
 
 AUTH_USER_MODEL = 'usuario.Usuario'
+
+LANGUAGE_CODE = "pt-br"
+USE_I18N = True
+USE_L10N = True

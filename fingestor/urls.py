@@ -17,5 +17,10 @@ urlpatterns = [
     path('perfil', usuario_views.perfil, name = 'perfil'),
     path("perfil/alterar-senha/", usuario_views.alterar_senha, name="alterar-senha"),
     path("relatorios/", transacao_views.relatorios, name="relatorios"),
-    path ('logout', LogoutView.as_view(next_page = 'login'), name = 'logout')
+    path ('logout', LogoutView.as_view(next_page = 'login'), name = 'logout'),
+    path(
+        "relatorios/despesas/<int:ano>/<int:mes>/",
+        transacao_views.despesas_do_mes,
+        name="despesas-mes",
+    ),
 ]

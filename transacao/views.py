@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Transacao
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
+from django.utils.formats import date_format
+from django.http import JsonResponse
+from calendar import month_name
 
 def transacao_nova(request):
     if request.method == "POST":
@@ -81,3 +84,31 @@ def relatorios(request):
         "transacao/relatorios.html",
         {"mensal": mensal, "maiores": maiores},
     )
+def despesas_do_mes(request, ano, mes):
+    user = request.user
+
+    qs = (
+        Transacao.objects
+        .filter(
+            usuario=user,
+            tipo_transacao__descricao__iexact="Despesa",
+            data__year=ano,
+            data__month=mes,
+        )
+        .select_related("categoria")
+        .order_by("-data")
+        .values("data", "categoria__categoria_name", "valor", "descricao")
+    )
+
+    transacoes = [
+        {
+            "data": date_format(t["data"], "DATE_FORMAT"),
+            "categoria": t["categoria__categoria_name"],
+            "valor": float(t["valor"]),
+            "descricao": t["descricao"] or "—",
+        }
+        for t in qs
+    ]
+
+    nome_mes = month_name[int(mes)].capitalize()
+    return JsonResponse({"mes": f"{nome_mes}/{ano}", "transacoes": transacoes})
