@@ -48,6 +48,17 @@
       {% endif %}
     </div>
 
+<!-- Data -->
+    <div>
+      <label for="{{ form.data.id_for_label }}" class="block mb-1 font-semibold">
+        {{ form.data.label }}
+      </label>
+      {{ form.data }}
+      {% if form.data.errors %}
+        <p class="mt-1 text-sm text-red-400">{{ form.data.errors.0 }}</p>
+      {% endif %}
+    </div>
+
     <!-- Descrição -->
     <div>
       <label for="{{ form.descricao.id_for_label }}" class="block mb-1 font-semibold">
