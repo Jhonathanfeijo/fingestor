@@ -48,7 +48,40 @@
                  shadow-2xl p-8">
       {% csrf_token %}
       {{ form.non_field_errors }}
-      … <!-- (campos Nome / Email / Meta iguais aos anteriores) -->
+
+      <!-- Nome -->
+      <div>
+        <label for="{{ form.nome.id_for_label }}" class="block mb-1 font-semibold">
+          {{ form.nome.label }}
+        </label>
+        {{ form.nome }}
+        {% if form.nome.errors %}
+          <p class="mt-1 text-sm text-red-400">{{ form.nome.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="{{ form.email.id_for_label }}" class="block mb-1 font-semibold">
+          {{ form.email.label }}
+        </label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <p class="mt-1 text-sm text-red-400">{{ form.email.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Meta -->
+      <div>
+        <label for="{{ form.meta.id_for_label }}" class="block mb-1 font-semibold">
+          {{ form.meta.label }}
+        </label>
+        {{ form.meta }}
+        {% if form.meta.errors %}
+          <p class="mt-1 text-sm text-red-400">{{ form.meta.errors.0 }}</p>
+        {% endif %}
+      </div>
+
       <div class="pt-4 flex gap-4">
         <button type="submit"
                 class="px-6 py-2 rounded-lg font-semibold bg-green-600 hover:opacity-70">

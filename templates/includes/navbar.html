@@ -8,10 +8,13 @@
       <a href="/relatorios" class="text-white hover:text-green-400 transition">Relatórios</a>
     </div>
     <div>
-      <span class="text-sm text-gray-300">Olá, 
-        <a href="/perfil">
-          <strong>{{ user.nome }}</strong></span>
-        </a>
-    </div>
+      <div class="flex flex-row gap-2">
+        <span class="tex text-gray-300 flex flex-row">Olá, 
+          <a class="hover:underline" href="/perfil">
+            <strong>{{ user.nome }}</strong></span>
+          </a>
+        </span>
+        <div class="mx-2">Sair</div>
+      </div>
   </nav>
   
